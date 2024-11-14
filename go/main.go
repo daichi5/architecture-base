@@ -1,21 +1,10 @@
 package main
 
 import (
-	"net/http"
-
-	"github.com/gin-gonic/gin"
+	"api/internal/presentation/router"
 )
 
-func setupRouter() *gin.Engine {
-	r := gin.Default()
-
-	r.GET("/users", func(c *gin.Context) {
-		c.String(http.StatusOK, "pong")
-	})
-	return r
-}
-
 func main() {
-	r := setupRouter()
+	r := router.NewRouter()
 	r.Run(":8080")
 }
