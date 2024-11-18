@@ -11,8 +11,7 @@ services:
   db:
     image: postgres:latest
     environment:
-      POSTGRES_USER: yourusername
-      POSTGRES_PASSWORD: yourpassword
+      POSTGRES_PASSWORD: password
       POSTGRES_DB: dbname
     ports:
       - "5433:5432"
