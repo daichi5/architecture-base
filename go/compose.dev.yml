@@ -7,3 +7,17 @@ services:
       - "8088:8080"
     volumes:
       - .:/app
+
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: yourusername
+      POSTGRES_PASSWORD: yourpassword
+      POSTGRES_DB: dbname
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
