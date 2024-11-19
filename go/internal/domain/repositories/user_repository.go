@@ -1,7 +1,10 @@
 package repositories
 
-import "api/internal/domain/models"
+import (
+	"api/internal/domain/models"
+	"context"
+)
 
 type UserRepository interface {
-	FindAll() ([]models.User, error)
+	FindAll(context.Context) ([]models.User, error)
 }
