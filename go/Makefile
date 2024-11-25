@@ -1,5 +1,7 @@
 include .env
 
+.PHONY: build migrate_diff migrate_apply
+
 build:
 	@echo "to be implemented"
 
