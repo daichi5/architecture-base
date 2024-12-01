@@ -3,6 +3,7 @@
 package ent
 
 import (
+	"api/ent/organization"
 	"api/ent/user"
 	"fmt"
 	"strings"
@@ -18,9 +19,32 @@ type User struct {
 	// ID of the ent.
 	ID uuid.UUID `json:"id,omitempty"`
 	// Name holds the value of the "name" field.
-	Name               string `json:"name,omitempty"`
+	Name string `json:"name,omitempty"`
+	// Edges holds the relations/edges for other nodes in the graph.
+	// The values are being populated by the UserQuery when eager-loading is set.
+	Edges              UserEdges `json:"edges"`
 	organization_users *uuid.UUID
 	selectValues       sql.SelectValues
+}
+
+// UserEdges holds the relations/edges for other nodes in the graph.
+type UserEdges struct {
+	// Organizations holds the value of the organizations edge.
+	Organizations *Organization `json:"organizations,omitempty"`
+	// loadedTypes holds the information for reporting if a
+	// type was loaded (or requested) in eager-loading or not.
+	loadedTypes [1]bool
+}
+
+// OrganizationsOrErr returns the Organizations value or an error if the edge
+// was not loaded in eager-loading, or loaded but was not found.
+func (e UserEdges) OrganizationsOrErr() (*Organization, error) {
+	if e.Organizations != nil {
+		return e.Organizations, nil
+	} else if e.loadedTypes[0] {
+		return nil, &NotFoundError{label: organization.Label}
+	}
+	return nil, &NotLoadedError{edge: "organizations"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -79,6 +103,11 @@ func (u *User) assignValues(columns []string, values []any) error {
 // This includes values selected through modifiers, order, etc.
 func (u *User) Value(name string) (ent.Value, error) {
 	return u.selectValues.Get(name)
+}
+
+// QueryOrganizations queries the "organizations" edge of the User entity.
+func (u *User) QueryOrganizations() *OrganizationQuery {
+	return NewUserClient(u.config).QueryOrganizations(u)
 }
 
 // Update returns a builder for updating this User.

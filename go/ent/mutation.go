@@ -457,14 +457,16 @@ func (m *OrganizationMutation) ResetEdge(name string) error {
 // UserMutation represents an operation that mutates the User nodes in the graph.
 type UserMutation struct {
 	config
-	op            Op
-	typ           string
-	id            *uuid.UUID
-	name          *string
-	clearedFields map[string]struct{}
-	done          bool
-	oldValue      func(context.Context) (*User, error)
-	predicates    []predicate.User
+	op                   Op
+	typ                  string
+	id                   *uuid.UUID
+	name                 *string
+	clearedFields        map[string]struct{}
+	organizations        *uuid.UUID
+	clearedorganizations bool
+	done                 bool
+	oldValue             func(context.Context) (*User, error)
+	predicates           []predicate.User
 }
 
 var _ ent.Mutation = (*UserMutation)(nil)
@@ -607,6 +609,45 @@ func (m *UserMutation) ResetName() {
 	m.name = nil
 }
 
+// SetOrganizationsID sets the "organizations" edge to the Organization entity by id.
+func (m *UserMutation) SetOrganizationsID(id uuid.UUID) {
+	m.organizations = &id
+}
+
+// ClearOrganizations clears the "organizations" edge to the Organization entity.
+func (m *UserMutation) ClearOrganizations() {
+	m.clearedorganizations = true
+}
+
+// OrganizationsCleared reports if the "organizations" edge to the Organization entity was cleared.
+func (m *UserMutation) OrganizationsCleared() bool {
+	return m.clearedorganizations
+}
+
+// OrganizationsID returns the "organizations" edge ID in the mutation.
+func (m *UserMutation) OrganizationsID() (id uuid.UUID, exists bool) {
+	if m.organizations != nil {
+		return *m.organizations, true
+	}
+	return
+}
+
+// OrganizationsIDs returns the "organizations" edge IDs in the mutation.
+// Note that IDs always returns len(IDs) <= 1 for unique edges, and you should use
+// OrganizationsID instead. It exists only for internal usage by the builders.
+func (m *UserMutation) OrganizationsIDs() (ids []uuid.UUID) {
+	if id := m.organizations; id != nil {
+		ids = append(ids, *id)
+	}
+	return
+}
+
+// ResetOrganizations resets all changes to the "organizations" edge.
+func (m *UserMutation) ResetOrganizations() {
+	m.organizations = nil
+	m.clearedorganizations = false
+}
+
 // Where appends a list predicates to the UserMutation builder.
 func (m *UserMutation) Where(ps ...predicate.User) {
 	m.predicates = append(m.predicates, ps...)
@@ -740,19 +781,28 @@ func (m *UserMutation) ResetField(name string) error {
 
 // AddedEdges returns all edge names that were set/added in this mutation.
 func (m *UserMutation) AddedEdges() []string {
-	edges := make([]string, 0, 0)
+	edges := make([]string, 0, 1)
+	if m.organizations != nil {
+		edges = append(edges, user.EdgeOrganizations)
+	}
 	return edges
 }
 
 // AddedIDs returns all IDs (to other nodes) that were added for the given edge
 // name in this mutation.
 func (m *UserMutation) AddedIDs(name string) []ent.Value {
+	switch name {
+	case user.EdgeOrganizations:
+		if id := m.organizations; id != nil {
+			return []ent.Value{*id}
+		}
+	}
 	return nil
 }
 
 // RemovedEdges returns all edge names that were removed in this mutation.
 func (m *UserMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 0)
+	edges := make([]string, 0, 1)
 	return edges
 }
 
@@ -764,24 +814,41 @@ func (m *UserMutation) RemovedIDs(name string) []ent.Value {
 
 // ClearedEdges returns all edge names that were cleared in this mutation.
 func (m *UserMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 0)
+	edges := make([]string, 0, 1)
+	if m.clearedorganizations {
+		edges = append(edges, user.EdgeOrganizations)
+	}
 	return edges
 }
 
 // EdgeCleared returns a boolean which indicates if the edge with the given name
 // was cleared in this mutation.
 func (m *UserMutation) EdgeCleared(name string) bool {
+	switch name {
+	case user.EdgeOrganizations:
+		return m.clearedorganizations
+	}
 	return false
 }
 
 // ClearEdge clears the value of the edge with the given name. It returns an error
 // if that edge is not defined in the schema.
 func (m *UserMutation) ClearEdge(name string) error {
+	switch name {
+	case user.EdgeOrganizations:
+		m.ClearOrganizations()
+		return nil
+	}
 	return fmt.Errorf("unknown User unique edge %s", name)
 }
 
 // ResetEdge resets all changes to the edge with the given name in this mutation.
 // It returns an error if the edge is not defined in the schema.
 func (m *UserMutation) ResetEdge(name string) error {
+	switch name {
+	case user.EdgeOrganizations:
+		m.ResetOrganizations()
+		return nil
+	}
 	return fmt.Errorf("unknown User edge %s", name)
 }

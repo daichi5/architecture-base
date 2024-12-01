@@ -4,6 +4,7 @@ package user
 
 import (
 	"entgo.io/ent/dialect/sql"
+	"entgo.io/ent/dialect/sql/sqlgraph"
 	"github.com/google/uuid"
 )
 
@@ -14,8 +15,17 @@ const (
 	FieldID = "id"
 	// FieldName holds the string denoting the name field in the database.
 	FieldName = "name"
+	// EdgeOrganizations holds the string denoting the organizations edge name in mutations.
+	EdgeOrganizations = "organizations"
 	// Table holds the table name of the user in the database.
 	Table = "users"
+	// OrganizationsTable is the table that holds the organizations relation/edge.
+	OrganizationsTable = "users"
+	// OrganizationsInverseTable is the table name for the Organization entity.
+	// It exists in this package in order to avoid circular dependency with the "organization" package.
+	OrganizationsInverseTable = "organizations"
+	// OrganizationsColumn is the table column denoting the organizations relation/edge.
+	OrganizationsColumn = "organization_users"
 )
 
 // Columns holds all SQL columns for user fields.
@@ -61,4 +71,18 @@ func ByID(opts ...sql.OrderTermOption) OrderOption {
 // ByName orders the results by the name field.
 func ByName(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldName, opts...).ToFunc()
+}
+
+// ByOrganizationsField orders the results by organizations field.
+func ByOrganizationsField(field string, opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newOrganizationsStep(), sql.OrderByField(field, opts...))
+	}
+}
+func newOrganizationsStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(OrganizationsInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.M2O, true, OrganizationsTable, OrganizationsColumn),
+	)
 }
