@@ -7,4 +7,5 @@ import (
 
 type UserRepository interface {
 	FindAll(context.Context) ([]models.User, error)
+	Save(context.Context, models.User) (models.User, error)
 }

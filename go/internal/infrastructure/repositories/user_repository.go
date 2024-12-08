@@ -15,6 +15,13 @@ type UserRepositoryImpl struct {
 // check interface at compile time
 var _ repositories.UserRepository = (*UserRepositoryImpl)(nil)
 
+func toUserModel(u *ent.User) *models.User {
+	return &models.User{
+		ID:   u.ID,
+		Name: u.Name,
+	}
+}
+
 func NewUserRepository(db *ent.Client) *UserRepositoryImpl {
 	return &UserRepositoryImpl{db: db}
 }
@@ -36,9 +43,14 @@ func (r *UserRepositoryImpl) FindAll(ctx context.Context) ([]models.User, error)
 	return users, nil
 }
 
-func toUserModel(u *ent.User) *models.User {
-	return &models.User{
-		ID:   u.ID,
-		Name: u.Name,
+func (r *UserRepositoryImpl) Save(ctx context.Context, user models.User) (models.User, error) {
+	// TODO: enable to update user
+	u, err := r.db.User.Create().SetID(user.ID).SetName(user.Name).Save(ctx)
+
+	if err != nil {
+		fmt.Println(err)
+		return models.User{}, fmt.Errorf("failed to save user: %w", err)
 	}
+
+	return *toUserModel(u), nil
 }
