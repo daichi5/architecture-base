@@ -17,7 +17,7 @@ export default function Home() {
 	return (
 		<Stack gap="8px">
 			<Header />
-			<Container maxWidth="1200px">
+			<Container maxWidth="1200px" className="py-8">
 				<Stack gap="8px">
 					<h1 className="text-4xl font-bold text-stone-400">Users</h1>
 					<Table>
