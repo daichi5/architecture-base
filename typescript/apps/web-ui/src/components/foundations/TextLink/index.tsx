@@ -5,7 +5,7 @@ type Props = {
 	children: React.ReactNode;
 };
 
-export const Link: React.FC<Props> = (props) => {
+export const TextLink: React.FC<Props> = (props) => {
 	return (
 		<NextLink href={props.href} className="hover:underline">
 			{props.children}

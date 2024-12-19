@@ -1,4 +1,4 @@
-import { Link } from "@/components/foundations/Link";
+import { TextLink } from "@/components/foundations/TextLink";
 import { Cluster } from "@/components/foundations/Cluster";
 import { Container } from "@/components/foundations/Container";
 import { Button } from "@/components/foundations/Button";
@@ -12,8 +12,8 @@ export const Header: React.FC = () => {
 						<h1>Your name</h1>
 						<nav>
 							<Cluster gap="16px">
-								<Link href="/">Home</Link>
-								<Link href="/users">Users</Link>
+								<TextLink href="/">Home</TextLink>
+								<TextLink href="/users">Users</TextLink>
 							</Cluster>
 						</nav>
 					</Cluster>
