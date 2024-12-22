@@ -35,7 +35,7 @@ export default function RootLayout({
 			>
 				<Stack gap="8px">
 					<Header />
-					<Container maxWidth="1200px" className="py-8">
+					<Container maxWidth="1200px" className="py-8 px-4">
 						{children}
 					</Container>
 				</Stack>
