@@ -31,7 +31,7 @@ export default function RootLayout({
 	return (
 		<html lang="en">
 			<body
-				className={`${geistSans.variable} ${geistMono.variable} antialiased bg-neutral-950`}
+				className={`${geistSans.variable} ${geistMono.variable} antialiased bg-neutral-950 text-white`}
 			>
 				<Stack gap="8px">
 					<Header />
