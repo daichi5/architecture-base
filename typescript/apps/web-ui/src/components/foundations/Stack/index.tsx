@@ -1,4 +1,4 @@
-type Gap = "4px" | "8px";
+type Gap = "4px" | "8px" | "16px" | "32px";
 
 type Props = {
 	children: React.ReactNode;
