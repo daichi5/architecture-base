@@ -11,18 +11,18 @@ import {
 
 export const UserCreateForm: React.FC = () => {
 	return (
-		<Stack gap="32px">
+		<Stack gap="32px" align="flex-start">
 			<Stack gap="16px">
 				<FormItem>
 					<FormLabel>Username</FormLabel>
 					<FormControl>
-						<Input placeholder="Username" width={"240px"} />
+						<Input placeholder="Username" width={"460px"} />
 					</FormControl>
 				</FormItem>
 				<FormItem>
 					<FormLabel>Email</FormLabel>
 					<FormControl>
-						<Input placeholder="Email" width={"240px"} />
+						<Input placeholder="Email" width={"460px"} />
 					</FormControl>
 				</FormItem>
 			</Stack>
