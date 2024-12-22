@@ -6,7 +6,7 @@ import { UserCreateForm } from "@/components/features/UsersNew/UserCreateForm";
 export const UsersNew: React.FC = () => {
 	return (
 		<Stack gap="32px">
-			<Text>Create User</Text>
+			<Text size="large">Create User</Text>
 			<UserCreateForm />
 		</Stack>
 	);
